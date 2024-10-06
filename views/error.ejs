@@ -1,3 +1,96 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #ff4b4b;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: white;
+      font-size: 1em;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Error image -->
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPQAAACUCAMAAACTBfSWAAAA+VBMVEXy8vL///+zs7P/T1Hz8/PGxsbr6+vV1dXd3d3m5ua6uro0NDT6+vrz8fPv7+/g4OAAAAARERGmpqYvLy//vAAqKioeHh5tbW0lJSVKSkob6zry8+9UVFQ8PDy2sbT6UVCLi4uCgoJdXV2WlpYYGBjuPT15eXn/TEr62NrrcXPunp9DQ0PrPkFb12rvgoP45eXwp6jwVFfGoKDNkZLLmprDra25s6fEtY/OtnyouqqRwpeDxonVioroYGHbe3zWtmzxui/3vB/XuV28tJlqz3g63lIq40V6zYbeukrJtYWZwZ7ecHHoukZD2ln2mpvzjo/ztbb0xsjhQkXbRMkyAAAMi0lEQVR4nO2deWOiSBPGERuQ2HjAqjgkQaPGI47H7Bw7u2t27n13Mptovv+HeauaqzlMjDKbGHn+SBCB8Ouqrq5q2ijkDlDCY9/AYyiDPhRl0IeiDPpQlEEfijLoQ1EGfSjKoA9Fd0Cr0tEeS1IfDk0Loi6enoog9mPvpOtigT4Mmkh65CKnp/z2XjSELq2hS94txJg57Y/5dUkmSdZOhKYSnnL66tdfX79xTn/77rff3r11tt///scfv7/fC2pRkoUE6kRo9QiOf/PnYj5fXDLqt399+Pjxw6fPsHn6/svXb9++ftkP6iNFLsWpE6EVPP7XeT+fz9uXsPn2tw+/gD5+Qlv//e0F6st+eLikJtg6CZqgd7+56vfzdr6/AFN//t8vTB/ewRtfGfOLr2jqp899pCRQJ0HLzLsXgJzP929fi+K7Dw70x3/Aux1Dv/j2XdwP6LIac/AkaBVpAJoJoT8nQj99YpRUVlWyGTToEg2d71+Be7/95ED/wEj20oF+uR+RTJQK5Zh/r4d+dQU92l68xu13PxjzP7j9/V9k/vf3vejSAA3+vTm0+OrPy6vLV872579+/Pj0zqH8/uXlyy/fHwvioXogtHj65o1vy7cgb/s9aD8SUfHh0L5CeXfo19PXw6H3Bm29Nod2aooQcvBqv1piC0vHAPemL3vaFFqWnpM2hKbyM1JhU2jyfFTaGFp4PsqgM+gMOoPee2XQGXQGnUHvvTLoDDqDzqD3Xhl0Br05tKb5W+4v4mzDG9ZPvv+ttCu0xag05COEeiLE4xcsLfnEx9TO0EBnaSBKp4Pl9QR0M1quNEKIxmytPUNoBAMba4PZcH7b6+X7/f641xsvbpZTAMc2eYbQ2GnJdHk1H/fzvPq3i+vBlDxBYiEFaEKmq0mE2FFvfj2gTxJ7V2hCBtfzJGSGvVhOyX/Ls5F2hCZkNcyvYwYnt28GLLzHRq54W5DUmweuSNhfil56a2jE0CxtNl9LzGRPBiQpmMUQSerUhF0wgXkHSyMIHdnrzcyY8/nhgPpZC3dHNEdDytH0OwJhK18pSc3SgGHRWY9x3an+AjzcimITRY9IShsaWAt4YTHWl3bp02TZu9vOLvVwoJVinVqvVHlVKu3Us3tCpVqlWjmWU3RvslobtsMa30zj7q1XiyEZrfRLGiqdGMVao5QeNJlOOGvG8bk9vVnMdR1oo+bLbKffqal0UUsTWiPaKOjN48kk2rXnkwX3gg1cIXMjtHFxHKjzEyytMOh0+rSmWQJZLXxb9ibTAU9t2/n5bLoKqPs3WhJ0taMEKqQfvanSROhUhiwcdi3O0MAMFYfv7DZm3jNIxaBZvGPmK6/Edi5BGHRF5Matn5C60QJCn6cDjXc98A09nmCuafG27iGzBc7g7epfsobibM2gj4LbuSc1SXyXhN/yLuFfijjQsX6zBTRzbm02DjosRRoyuPKaoTfCQkMjuZm3BwfrcGbmWJpEaEocAfHfJMTJ2EiIkCnY478gxHkTfiK0ER8LtwtkmjYd+j16PNKwloJy6wp9287fziixLKxFgl5tj6jGQZM10N794p3LMgeHa4Jk2bUhe1UuKAW488BDAlZC4FzcSg9ac8ZobkQCaiyr6fQKO/F8xubIwPRDLpqzPnCvpUm53Wm1JUKV9kWt2wFKqd1qtRXYcV6sVUXnwkQ9ahj1arVuHusFwbszIutwbKtEZPEMxkIVrq0epwgtcN7NqKcs4yJg/z7EbdbptRBzfrFi0D62Cx3pq1Sq1OsVnUpmtVasAADVcccRFbt1gzUSIMvicRVeocyq0VG9TqA2KvWuKajtqmkUq+U0oRnRdBLKRtDW7J4HQ2AmThcfhobu+dJiU2broJ2qAKBhJBMLML7Cb4AmOuyoSwqDdKDLrRq+a5gm7jPqDcW5ClUb9aJxIne62BzdVKGZvaaLfEj2SLPYnQ+WU4LVBdjZtiNHhAbqO6C7ertW7ELW7EGb0lnNqMIOEbtrGxvA7DYbjeN6HeEbBRpAXyiwB44NLB3Pb7eK3mDGSBlt266tmZVjvo264WfMvEBG+VljD7rWbpr1tq6fd1xoo3VSL7Z0vaFD2+ho4MrZkVIuK9I55nX1Dgv6LnSrWz/T9c4xJDtETgtaw8FoMI4g9T1qdgSJMzuRLGzpWvPMV4v6li6e1EylJAiy6kIXT+rHZQBTVXBuxtxWsUqGUzrYJicK+gmDxpM7cFgJzyUlgC7G89vthiyyikIz/8XbdsL4IvZ2EjQUHKZXbzQ46GJFcdffCpRBG13ZHbdoC86rn7nBi1B6bGI6i4OAC22eB0N46YxBpzOJkATtRzM+W+NcYTjg/rTj3nxlyUNX4T692R4GDeHbTT4InmYqftJKC2jqportwaCNZpkK7shGBIA2OrEMd7tAFoL28+sAengftGvpmumr4QQjhDYM7I/OnTNL1y5kN2GhCgbzc8/Q2DQNNLXiW7rWyrl5KF4BLa2nFL3jlmZ1lTdggnv3Y9NISX36rOGrE1ja5CpgZulu28thWBvUdT7od5yI6PXp2lFwp9AiNQOgd7e0U27E3NtlxuBdsqzIIL0GGrw2UmU5Q1YrAl3VvebMnZsOV5BxH8EBFd0PZDWuRPWgd7c0S8iiQ5bLjAk3ZqQWGUyi0DfTpDTUr4wEDloXIpb2q7EcdtITiYeWWGFOg+SEg6YAbYjpRG+NRMPz7YwVHRYmJxZ7PouVps3NldozQhKSk0ju7WRkMWgpgDZgKJZ4D/agISNn0HyhRhsGg04jegMgl4YC15jZWSOQhtojaGrLImhrPiebL8N/+SHQdcl3b4Q+4aCFAJpGoDGgN0wTOkNKc2QEZ7x9wWDF2oKNz/bIcousKz6GLwYkKQ19sKUx7Za40yJ9OgQt0BakPVJK0Tuch2JBbWmsfu47L9myC5+a+fmNU4d4N7SdpYVcC2KVyRdnLJ6zKZgotMCSF1CUeds5Mosrs7C3Yv2EzLZreFZG8j3fHlFhg5mT+6Ap2rWOhYhvznNsBiXB0uu1rXtrM9sLUvOVxRZaBPl2j82lQBe/9ltmw+mi+/o0kVmuovh3A7k4MLO0NBE69hxre2gtPDE4wHUWLjOL2L2ZBrFMW/qWZhODSe4daCNogZ6ZaGp/9iyHuTiM48mWJlQuC+m4N8OehqaAaaiWtKFfw66AGaeAtfDUt2dp3iibQLPk3OyUcqz8oCLmI00lKC15aMhc2o2OklKVxWbJ/PndfP9qCsyhSQNIVpDZ3TW+oUJkuh+hzbM2J4yy9/VpKJxYCV1rSzKlJaVThCHMdI6PQ1OpWTe7jXKUertAxgC4xzr9YayWnPO7bt1iIwLNFxwmy5zugwbrKsesgLyAvP2sCVlmsd6W+ekiPjlpmVhtx1Ky3R7g3fds2vP/maZFn9XGnloWk6HFsKXx+etFFe3LynCsQxtezVWOuTdm6gnJ9w7Ppy18bGPb6x/LO/4OYQ3G6EgMhUBWMcI6caENI2Jp2CGFglO5UanhGQy94pfLAN01ENqfHacdOKh2EctOdnk+TVe3Gz2gvppqQmQlAhHEYjMiB7rWbBb50lE0ms2TEDShOemsaDjucQ4RzX2DqucncJkSn5ifp1RlecyYds5uXZsmGtr9ORzQGHQp4f+gOQV19G9R/y2/vRC7JOHCCoXmggU6zjUp5R6LkZxyVM4J6UwXedeks3sWI7CFNvenSPw1E3YkXIAkPeqMH0cSn4buto4M8497qCcDKsQMnZoe1J6+dlpHJrDFc+P1oaw/hyTF2u7ONtJ/DO39VTIYrXXx8WKp/URi4bGg71oQuxgNfjLzlkpjvTfRVsPbXp+fAO33x4CcWOI8AaXwGQ6opAmdziaL+a2zaNK+nQ+vVxp1p9z/M5aNtTO0M1GE5p6ulqPry8ub69lyMMWh4iku6mdKB9rBxrETP8xhufMFzxca5ayxin9S6Sff+9bKPoyWQWfQGfTeK4POoDPoDHrvlUFn0M8W+iH/QvMJTgZsqc2hc88IWlYOEFrdGPrZ+Dd696bQzySUEYGUJYDe6NsZEDq6LGYfRdC5lcIDLP0cmGX8YCd++chm0AQ/DUYE/gNi90iI/I7uD15vfs3t/zLbLkhoaFUtbfKNK8zUalmVS6XSY/9P8q2lKhIwF8C5Y969FprIahmd47H/+fz2Yp9ZLqDpNvrqKMfUsqqWC8o+q1AA35YTVkKs/YpHSkqAXdhrqcnMd3yvJWQoiL3XKpWEpG/+u+sbTGMfcto7kcQvO8y+tvVglEEfijLoQ1EGfSjKoA9F/wfcbdWZuDHohAAAAABJRU5ErkJggg==" alt="Error Image">
+    
+    <!-- Error message -->
+    <h1>Oops! Something went wrong.</h1>
+    <p>We're sorry, but we couldn't complete your request. Please try again or sign up or sign in to continue.</p>
+    
+    <!-- Sign Up and Sign In buttons -->
+    <div class="btn-group">
+      <a href="/signup" class="btn">Sign Up</a>
+      <a href="/signin" class="btn btn-secondary">Sign In</a>
+    </div>
+  </div>
+</body>
+</html>
