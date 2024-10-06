@@ -2,6 +2,11 @@ require("dotenv").config({path: './.env'})
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const MongoStore = require('connect-mongo');
+
+
+//database
+require("./routes/database").connectDatabase();
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const expressSession = require('express-session');
@@ -9,8 +14,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const passport = require('passport');
 
-//database
-require("./routes/database").connectDatabase();
+
 
 var app = express();
 
@@ -21,8 +25,9 @@ app.set('view engine', 'ejs');
 // app.use(flash());
 app.use(expressSession({
   resave : false,
-  saveUninitialized: false,
-  secret: "hey"
+  saveUninitialized: true,
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URL })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
